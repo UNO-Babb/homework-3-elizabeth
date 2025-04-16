@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ghost Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Ghost Board Game</h1>
+    <div class="board">
+        {% for i in range(20) %}
+            <div class="square
+                {% if i == 0 %} start {% elif i == 19 %} finish {% endif %}
+                {% if i in board.friendly_ghosts %} friendly {% elif i in board.evil_ghosts %} evil {% endif %}">
+                {{ 'Enter' if i == 0 else 'Finish' if i == 19 else i }}
+                {% if players.red == i %}<div class="token red"></div>{% endif %}
+                {% if players.blue == i %}<div class="token blue"></div>{% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="info">
+        {% if winner %}
+            <h2>🎉 Player {{ '1 (Red)' if winner == 'red' else '2 (Blue)' }} wins!</h2>
+            <a href="{{ url_for('reset') }}">Play Again</a>
+        {% else %}
+            <h2>Player {{ '1 (Red)' if turn == 'red' else '2 (Blue)' }}'s Turn</h2>
+            <button onclick="rollDice()">Roll Dice</button>
+            <p id="result"></p>
+        {% endif %}
+    </div>
+
+    <script>
+        function rollDice() {
+            fetch('/roll', {method: 'POST'})
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        let msg = `🎲 Rolled a ${data.roll}. `;
+                        if (data.effect === 'friendly') {
+                            msg += `Landed on a friendly ghost! Bonus roll!`;
+                        } else if (data.effect === 'evil') {
+                            msg += `Oh no! Evil ghost! Moved backward!`;
+                        } else if (data.effect === 'finish') {
+                            msg += `Reached the finish! 🎉`;
+                        }
+                        document.getElementById('result').innerText = msg;
+                        setTimeout(() => location.reload(), 1500);
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

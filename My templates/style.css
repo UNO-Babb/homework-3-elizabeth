@@ -1,0 +1,60 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f2f2f2;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(5, 80px);
+    gap: 5px;
+    justify-content: center;
+    margin: 20px;
+}
+
+.square {
+    background: white;
+    border: 2px solid #444;
+    height: 80px;
+    width: 80px;
+    position: relative;
+    font-size: 14px;
+    padding: 5px;
+}
+
+.start {
+    background-color: lightgreen;
+}
+.finish {
+    background-color: gold;
+}
+
+.friendly {
+    background-color: #cceeff;
+}
+.evil {
+    background-color: #ffcccc;
+}
+
+.token {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+.token.red {
+    background-color: red;
+}
+
+.token.blue {
+    background-color: blue;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+}
