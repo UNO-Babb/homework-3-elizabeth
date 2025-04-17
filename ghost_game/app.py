@@ -24,6 +24,31 @@ def init_game():
     session['turn'] = 'red'
     session['winner'] = None
 
+import random
+
+def roll_dice():
+    return random.randint(1, 6)
+
+def move_player(player, roll):
+    new_position = player['position'] + roll
+    if new_position >= len(board):
+        new_position = len(board) - 1  # Ensure player doesn't exceed board length
+
+    space = board[new_position]
+    if space == 'friendly_ghost':
+        bonus_roll = roll_dice()
+        new_position += bonus_roll
+        if new_position >= len(board):
+            new_position = len(board) - 1
+    elif space == 'evil_ghost':
+        penalty_roll = roll_dice()
+        new_position -= penalty_roll
+        if new_position < 0:
+            new_position = 0
+
+    player['position'] = new_position
+    return new_position
+
 
 @app.route('/')
 def index():
@@ -95,3 +120,4 @@ def reset():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
